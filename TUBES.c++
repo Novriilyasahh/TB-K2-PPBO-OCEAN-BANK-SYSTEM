@@ -3,8 +3,7 @@
 #include <iomanip>
 
 using namespace std;
-// selamat malamlbjouhkbbbilgyigyihbibiybkhijoinonvosdnvosdniubiengdjksnkjjgineurbgdsjn verjgnieprgbbumwe8xwehuwehcuwehtuhv whtuwcuhuthmwhcwuhttucwmtuituthuijbfilhewbfihe fjksdbfihbgsbigyvbsibyhfdjfhzfhadkhdgbsbsiduhsuhfihdbbivbiubsbiiubygbihfidgfiughihgbnfksdfnsfhwrgrsr[ahohoiahsuiiusbisdishfd[fjsjhfbddhfsgibfeisbyyhbbynyabsdybsyudjkd fimanaubsydmmkshfyvfopqpjouhiuabhifbdsnfdjbifbsiunsriwtiugtywc fbdshubfusdhbfusviyewvtaidbhveytgaibjhdzbfj
-
+// selamat malam
 /*
 ==================================================
                 CLASS NASABAH
