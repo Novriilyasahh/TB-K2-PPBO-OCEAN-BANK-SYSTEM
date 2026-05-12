@@ -1,9 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <cstdlib>
 
 using namespace std;
-// selamat malam
+
 /*
 ==================================================
                 CLASS NASABAH
@@ -17,7 +18,6 @@ protected:
     string nama;
     string spesies;
     string rekening;
-
     double saldo;
 
 public:
@@ -51,7 +51,7 @@ public:
     virtual void tampilkanData() {
 
         cout << "\n========================================";
-        cout << "\n         DATA NASABAH";
+        cout << "\n           DATA NASABAH";
         cout << "\n========================================";
 
         cout << "\n Nama         : " << nama;
@@ -189,16 +189,21 @@ public:
 
         for (int i = 0; teks[i] != '\0'; i++) {
 
-            if (teks[i] == '0') salah = 1;
-            if (teks[i] == '1') salah = 1;
-            if (teks[i] == '2') salah = 1;
-            if (teks[i] == '3') salah = 1;
-            if (teks[i] == '4') salah = 1;
-            if (teks[i] == '5') salah = 1;
-            if (teks[i] == '6') salah = 1;
-            if (teks[i] == '7') salah = 1;
-            if (teks[i] == '8') salah = 1;
-            if (teks[i] == '9') salah = 1;
+            if (teks[i] >= 'A' &&
+                teks[i] <= 'Z') {
+            }
+
+            else if (teks[i] >= 'a' &&
+                     teks[i] <= 'z') {
+            }
+
+            else if (teks[i] == ' ') {
+            }
+
+            else {
+
+                salah = 1;
+            }
         }
 
         return salah;
@@ -242,63 +247,91 @@ public:
 
     void tambahNasabah() {
 
-        string nama;
-        string spesies;
-        string rekening;
-        string inputSaldo;
+    string nama;
+    string spesies;
+    string rekening;
+    string inputSaldo;
 
-        double saldo;
+    double saldo;
 
-        int salah;
-        int ditemukan;
+    int salah;
+    int ditemukan;
 
-        cout << "\n========================================";
-        cout << "\n         TAMBAH NASABAH";
-        cout << "\n========================================\n";
+    cout << "\n========================================";
+    cout << "\n         TAMBAH NASABAH";
+    cout << "\n========================================\n";
 
-        cout << "Nama Nasabah : ";
-        cin >> nama;
+    cin.ignore();
+
+    // INPUT NAMA
+    while (1) {
+
+        cout << "(0 = Kembali ke Menu Utama)";
+        cout << "\nNama Nasabah";
+        cout << "\nInput : ";
+
+        getline(cin, nama);
+
+        if (nama == "0") {
+
+            return;
+        }
 
         salah = validHuruf(nama);
 
-        while (salah == 1) {
+        if (salah == 0) {
 
-            cout << "\n[ ERROR ] Nama tidak boleh angka!\n";
-
-            cout << "Masukkan nama lagi : ";
-            cin >> nama;
-
-            salah = validHuruf(nama);
+            break;
         }
 
-        cout << "Spesies Laut : ";
-        cin >> spesies;
+        cout << "\n[ ERROR ] Nama hanya boleh huruf!\n";
+    }
+
+    // INPUT SPESIES
+    while (1) {
+
+        cout << "(0 = Kembali ke Menu Utama)";
+        cout << "\nSpesies Laut";
+        cout << "\nInput : ";
+
+        getline(cin, spesies);
+
+        if (spesies == "0") {
+
+            return;
+        }
 
         salah = validHuruf(spesies);
 
-        while (salah == 1) {
+        if (salah == 0) {
 
-            cout << "\n[ ERROR ] Spesies tidak boleh angka!\n";
-
-            cout << "Masukkan spesies lagi : ";
-            cin >> spesies;
-
-            salah = validHuruf(spesies);
+            break;
         }
 
-        cout << "No Rekening  : ";
+        cout << "\n[ ERROR ] Spesies hanya boleh huruf!\n";
+    }
+
+    // INPUT REKENING
+    while (1) {
+
+        cout << "(0 = Kembali ke Menu Utama)";
+        cout << "\nNo Rekening";
+        cout << "\nInput : ";
+
         cin >> rekening;
+
+        if (rekening == "0") {
+
+            return;
+        }
 
         salah = validAngka(rekening);
 
-        while (salah == 1) {
+        if (salah == 1) {
 
             cout << "\n[ ERROR ] Rekening harus angka!\n";
 
-            cout << "Masukkan rekening lagi : ";
-            cin >> rekening;
-
-            salah = validAngka(rekening);
+            continue;
         }
 
         ditemukan = 0;
@@ -312,84 +345,83 @@ public:
             }
         }
 
-        while (ditemukan == 1) {
+        if (ditemukan == 1) {
 
             cout << "\n[ ERROR ] Rekening sudah digunakan!\n";
 
-            cout << "Masukkan rekening baru : ";
-            cin >> rekening;
+        } else {
 
-            ditemukan = 0;
-
-            for (int i = 0; i < jumlahNasabah; i++) {
-
-                if (daftarNasabah[i]->getRekening()
-                    == rekening) {
-
-                    ditemukan = 1;
-                }
-            }
+            break;
         }
+    }
 
-        cout << "Saldo Awal   : ";
+    // INPUT SALDO
+    while (1) {
+
+        cout << "(0 = Kembali ke Menu Utama)";
+        cout << "\nSaldo Awal";
+        cout << "\nInput : ";
+
         cin >> inputSaldo;
+
+        if (inputSaldo == "0") {
+
+            return;
+        }
 
         salah = validAngka(inputSaldo);
 
-        while (salah == 1) {
+        if (salah == 1) {
 
             cout << "\n[ ERROR ] Saldo harus angka!\n";
 
-            cout << "Masukkan saldo lagi : ";
-            cin >> inputSaldo;
-
-            salah = validAngka(inputSaldo);
+            continue;
         }
 
         saldo = atof(inputSaldo.c_str());
 
-        while (saldo < 10000 ||
-               saldo > 50000000) {
+        if (saldo < 10000 ||
+            saldo > 50000000) {
 
             cout << "\n[ ERROR ]";
             cout << "\nMinimal saldo 10000";
             cout << "\nMaksimal saldo 50000000\n";
 
-            cout << "Masukkan saldo lagi : ";
-            cin >> inputSaldo;
-
-            saldo = atof(inputSaldo.c_str());
-        }
-
-        if (saldo >= 1000000) {
-
-            daftarNasabah[jumlahNasabah]
-                = new PremiumNasabah(
-                    nama,
-                    spesies,
-                    rekening,
-                    saldo,
-                    "Gold"
-                );
-
         } else {
 
-            daftarNasabah[jumlahNasabah]
-                = new Nasabah(
-                    nama,
-                    spesies,
-                    rekening,
-                    saldo
-                );
+            break;
         }
-
-        jumlahNasabah++;
-
-        simpanFile();
-
-        cout << "\n[ SUCCESS ] Nasabah berhasil ditambahkan!\n";
     }
 
+    // PREMIUM GOLD
+    if (saldo >= 1000000) {
+
+        daftarNasabah[jumlahNasabah]
+            = new PremiumNasabah(
+                nama,
+                spesies,
+                rekening,
+                saldo,
+                "Gold"
+            );
+
+    } else {
+
+        daftarNasabah[jumlahNasabah]
+            = new Nasabah(
+                nama,
+                spesies,
+                rekening,
+                saldo
+            );
+    }
+
+    jumlahNasabah++;
+
+    simpanFile();
+
+    cout << "\n[ SUCCESS ] Nasabah berhasil ditambahkan!\n";
+}
     /*
     ==============================================
                     CEK SALDO
@@ -401,40 +433,59 @@ public:
         string rekening;
 
         int salah;
-        int ditemukan = 0;
+        int ditemukan;
 
-        cout << "\nMasukkan nomor rekening : ";
-        cin >> rekening;
+        while (1) {
 
-        salah = validAngka(rekening);
+            ditemukan = 0;
 
-        while (salah == 1) {
-
-            cout << "\n[ ERROR ] Rekening harus angka!\n";
-
-            cout << "Masukkan rekening lagi : ";
+            cout << "(0 = Kembali ke Menu Utama)";
+            cout << "\nMasukkan nomor rekening";
+            cout << "\nInput : ";
             cin >> rekening;
 
-            salah = validAngka(rekening);
-        }
+            if (rekening == "0") {
 
-        for (int i = 0; i < jumlahNasabah; i++) {
-
-            if (daftarNasabah[i]->getRekening()
-                == rekening) {
-
-                cout << "\nNama  : "
-                     << daftarNasabah[i]->getNama();
-
-                cout << "\nSaldo : "
-                     << daftarNasabah[i]->getSaldo()
-                     << endl;
-
-                ditemukan = 1;
+                return;
             }
-        }
 
-        if (ditemukan == 0) {
+            salah = validAngka(rekening);
+
+            while (salah == 1) {
+
+                cout << "\n[ ERROR ] Rekening harus angka!\n";
+
+                cout << "Masukkan rekening lagi : ";
+                cin >> rekening;
+
+                if (rekening == "0") {
+
+                    return;
+                }
+
+                salah = validAngka(rekening);
+            }
+
+            for (int i = 0; i < jumlahNasabah; i++) {
+
+                if (daftarNasabah[i]->getRekening()
+                    == rekening) {
+
+                    cout << "\nNama  : "
+                         << daftarNasabah[i]->getNama();
+
+                    cout << "\nSaldo : "
+                         << daftarNasabah[i]->getSaldo()
+                         << endl;
+
+                    ditemukan = 1;
+                }
+            }
+
+            if (ditemukan == 1) {
+
+                return;
+            }
 
             cout << "\n[ ERROR ] Rekening tidak ditemukan!\n";
         }
@@ -454,69 +505,85 @@ public:
         double jumlah;
 
         int salah;
-        int ditemukan = 0;
+        int ditemukan;
 
-        cout << "\nMasukkan nomor rekening : ";
-        cin >> rekening;
+        while (1) {
 
-        salah = validAngka(rekening);
+            ditemukan = 0;
 
-        while (salah == 1) {
-
-            cout << "\n[ ERROR ] Rekening harus angka!\n";
-
-            cout << "Masukkan rekening lagi : ";
+            cout << "(0 = Kembali ke Menu Utama)";
+            cout << "\nMasukkan nomor rekening";
+            cout << "\nInput : ";
             cin >> rekening;
 
+            if (rekening == "0") {
+
+                return;
+            }
+
             salah = validAngka(rekening);
-        }
 
-        for (int i = 0; i < jumlahNasabah; i++) {
+            while (salah == 1) {
 
-            if (daftarNasabah[i]->getRekening()
-                == rekening) {
+                cout << "\n[ ERROR ] Rekening harus angka!\n";
 
-                ditemukan = 1;
+                cout << "Masukkan rekening lagi : ";
+                cin >> rekening;
 
-                cout << "Jumlah setor : ";
-                cin >> inputJumlah;
+                if (rekening == "0") {
 
-                salah = validAngka(inputJumlah);
+                    return;
+                }
 
-                while (salah == 1) {
+                salah = validAngka(rekening);
+            }
 
-                    cout << "\n[ ERROR ] Jumlah harus angka!\n";
+            for (int i = 0; i < jumlahNasabah; i++) {
 
-                    cout << "Masukkan lagi : ";
+                if (daftarNasabah[i]->getRekening()
+                    == rekening) {
+
+                    ditemukan = 1;
+
+                    cout << "Jumlah setor : ";
                     cin >> inputJumlah;
 
                     salah = validAngka(inputJumlah);
-                }
 
-                jumlah = atof(inputJumlah.c_str());
+                    while (salah == 1) {
 
-                while (jumlah < 10000 ||
-                       jumlah > 50000000) {
+                        cout << "\n[ ERROR ] Jumlah harus angka!\n";
 
-                    cout << "\n[ ERROR ]";
-                    cout << "\nMinimal setor 10000";
-                    cout << "\nMaksimal setor 50000000\n";
+                        cout << "Masukkan lagi : ";
+                        cin >> inputJumlah;
 
-                    cout << "Masukkan lagi : ";
-                    cin >> inputJumlah;
+                        salah = validAngka(inputJumlah);
+                    }
 
                     jumlah = atof(inputJumlah.c_str());
+
+                    while (jumlah < 10000 ||
+                           jumlah > 50000000) {
+
+                        cout << "\n[ ERROR ]";
+                        cout << "\nMinimal setor 10000";
+                        cout << "\nMaksimal setor 50000000\n";
+
+                        cout << "Masukkan lagi : ";
+                        cin >> inputJumlah;
+
+                        jumlah = atof(inputJumlah.c_str());
+                    }
+
+                    daftarNasabah[i]->setor(jumlah);
+
+                    simpanFile();
+
+                    cout << "\n[ SUCCESS ] Setor berhasil!\n";
+
+                    return;
                 }
-
-                daftarNasabah[i]->setor(jumlah);
-
-                simpanFile();
-
-                cout << "\n[ SUCCESS ] Setor berhasil!\n";
             }
-        }
-
-        if (ditemukan == 0) {
 
             cout << "\n[ ERROR ] Rekening tidak ditemukan!\n";
         }
@@ -536,61 +603,88 @@ public:
         double jumlah;
 
         int salah;
-        int ditemukan = 0;
+        int ditemukan;
 
-        cout << "\nMasukkan nomor rekening : ";
-        cin >> rekening;
+        while (1) {
 
-        salah = validAngka(rekening);
+            ditemukan = 0;
 
-        while (salah == 1) {
-
-            cout << "\n[ ERROR ] Rekening harus angka!\n";
-
-            cout << "Masukkan rekening lagi : ";
+            cout << "(0 = Kembali ke Menu Utama)";
+            cout << "\nMasukkan nomor rekening";
+            cout << "\nInput : ";
             cin >> rekening;
 
+            if (rekening == "0") {
+
+                return;
+            }
+
             salah = validAngka(rekening);
-        }
 
-        for (int i = 0; i < jumlahNasabah; i++) {
+            while (salah == 1) {
 
-            if (daftarNasabah[i]->getRekening()
-                == rekening) {
+                cout << "\n[ ERROR ] Rekening harus angka!\n";
 
-                ditemukan = 1;
+                cout << "Masukkan rekening lagi : ";
+                cin >> rekening;
 
-                cout << "Jumlah tarik : ";
-                cin >> inputJumlah;
+                if (rekening == "0") {
 
-                salah = validAngka(inputJumlah);
+                    return;
+                }
 
-                while (salah == 1) {
+                salah = validAngka(rekening);
+            }
 
-                    cout << "\n[ ERROR ] Jumlah harus angka!\n";
+            for (int i = 0; i < jumlahNasabah; i++) {
 
-                    cout << "Masukkan lagi : ";
+                if (daftarNasabah[i]->getRekening()
+                    == rekening) {
+
+                    ditemukan = 1;
+
+                    cout << "Jumlah tarik : ";
                     cin >> inputJumlah;
 
                     salah = validAngka(inputJumlah);
-                }
 
-                jumlah = atof(inputJumlah.c_str());
+                    while (salah == 1) {
 
-                if (daftarNasabah[i]->tarik(jumlah)) {
+                        cout << "\n[ ERROR ] Jumlah harus angka!\n";
 
-                    simpanFile();
+                        cout << "Masukkan lagi : ";
+                        cin >> inputJumlah;
 
-                    cout << "\n[ SUCCESS ] Penarikan berhasil!\n";
+                        salah = validAngka(inputJumlah);
+                    }
 
-                } else {
+                    jumlah = atof(inputJumlah.c_str());
 
-                    cout << "\n[ ERROR ] Saldo tidak cukup!\n";
+                    while (jumlah < 10000) {
+
+                        cout << "\n[ ERROR ]";
+                        cout << "\nMinimal penarikan adalah 10000!\n";
+
+                        cout << "Masukkan jumlah tarik lagi : ";
+                        cin >> inputJumlah;
+
+                        jumlah = atof(inputJumlah.c_str());
+                    }
+
+                    if (daftarNasabah[i]->tarik(jumlah)) {
+
+                        simpanFile();
+
+                        cout << "\n[ SUCCESS ] Penarikan berhasil!\n";
+
+                    } else {
+
+                        cout << "\n[ ERROR ] Saldo tidak cukup!\n";
+                    }
+
+                    return;
                 }
             }
-        }
-
-        if (ditemukan == 0) {
 
             cout << "\n[ ERROR ] Rekening tidak ditemukan!\n";
         }
@@ -636,35 +730,51 @@ public:
         string rekening;
 
         int salah;
-        int ditemukan = 0;
+        int ditemukan;
 
-        cout << "\nMasukkan nomor rekening : ";
-        cin >> rekening;
+        while (1) {
 
-        salah = validAngka(rekening);
+            ditemukan = 0;
 
-        while (salah == 1) {
-
-            cout << "\n[ ERROR ] Rekening harus angka!\n";
-
-            cout << "Masukkan rekening lagi : ";
+            cout << "(0 = Kembali ke Menu Utama)";
+            cout << "\nMasukkan nomor rekening";
+            cout << "\nInput : ";
             cin >> rekening;
 
-            salah = validAngka(rekening);
-        }
+            if (rekening == "0") {
 
-        for (int i = 0; i < jumlahNasabah; i++) {
-
-            if (daftarNasabah[i]->getRekening()
-                == rekening) {
-
-                daftarNasabah[i]->tampilkanData();
-
-                ditemukan = 1;
+                return;
             }
-        }
 
-        if (ditemukan == 0) {
+            salah = validAngka(rekening);
+
+            while (salah == 1) {
+
+                cout << "\n[ ERROR ] Rekening harus angka!\n";
+
+                cout << "Masukkan rekening lagi : ";
+                cin >> rekening;
+
+                if (rekening == "0") {
+
+                    return;
+                }
+
+                salah = validAngka(rekening);
+            }
+
+            for (int i = 0; i < jumlahNasabah; i++) {
+
+                if (daftarNasabah[i]->getRekening()
+                    == rekening) {
+
+                    daftarNasabah[i]->tampilkanData();
+
+                    ditemukan = 1;
+
+                    return;
+                }
+            }
 
             cout << "\n[ ERROR ] Data tidak ditemukan!\n";
         }
@@ -849,6 +959,9 @@ void tampilanAwal() {
 
 int main() {
 
+    // WARNA TEMA LAUT
+    system("color 0B");
+
     cout << fixed;
     cout << setprecision(0);
 
@@ -857,6 +970,8 @@ int main() {
     int pilihan;
 
     do {
+
+        system("cls");
 
         tampilanAwal();
 
@@ -872,8 +987,6 @@ int main() {
         cout << "\n\nPilih menu : ";
         cin >> pilihan;
 
-        // VALIDASI INPUT HURUF
-
         while (cin.fail()) {
 
             cin.clear();
@@ -885,25 +998,12 @@ int main() {
             cin >> pilihan;
         }
 
-        // VALIDASI MENU
-
         while (pilihan < 1 || pilihan > 8) {
 
             cout << "\n[ ERROR ] Menu hanya tersedia 1 - 8!\n";
 
             cout << "Pilih menu lagi : ";
             cin >> pilihan;
-
-            while (cin.fail()) {
-
-                cin.clear();
-                cin.ignore(1000, '\n');
-
-                cout << "\n[ ERROR ] Input harus angka!\n";
-
-                cout << "Pilih menu lagi : ";
-                cin >> pilihan;
-            }
         }
 
         switch (pilihan) {
@@ -945,6 +1045,8 @@ int main() {
 
             break;
         }
+
+        system("pause");
 
     } while (pilihan != 8);
 
