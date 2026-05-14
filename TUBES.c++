@@ -1,7 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <cstdlib>
+
 
 using namespace std;
 
