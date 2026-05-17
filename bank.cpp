@@ -9,6 +9,7 @@
 #define GOLD "\033[33m"
 #define CYAN "\033[36m"
 #define RESET "\033[36m"
+#define HIJAU "\033[32m"
 
 using namespace std;
 
@@ -62,7 +63,7 @@ void Bank::tambahNasabah() {
     int salah, ditemukan;
 
     cout << "\n========================================";
-    cout << "\n         TAMBAH NASABAH";
+    cout << "\n            TAMBAH NASABAH";
     cout << "\n========================================\n";
 
     cin.ignore();
@@ -180,7 +181,7 @@ while (1) {
 
     jumlahNasabah++;
     simpanFile();
-    cout << "\n[ SUCCESS ] Nasabah berhasil ditambahkan!\n";
+    cout << HIJAU << "\n[ SUCCESS ] Nasabah berhasil ditambahkan!\n" << RESET;
 }
 
 void Bank::cekSaldo() {
@@ -203,6 +204,10 @@ void Bank::cekSaldo() {
         break;
     }
 
+    cout << "\n========================================";
+    cout << "\n           CEK SALDO NASABAH";
+    cout << "\n========================================\n";
+    
     for (int i = 0; i < jumlahNasabah; i++) {
 
         if (daftarNasabah[i]->getRekening() == rekening) {
@@ -239,6 +244,11 @@ while (1) {
 
     break;
 }
+
+    cout << "\n========================================";
+    cout << "\n          SETOR SALDO NASABAH";
+    cout << "\n========================================\n";
+
     if (rekening == "0") return;
     for (int i = 0; i < jumlahNasabah; i++) {
         if (daftarNasabah[i]->getRekening() == rekening) {
@@ -260,7 +270,7 @@ while (1) {
             *daftarNasabah[i] += jumlah; 
             
             simpanFile();
-            cout << "\n[ SUCCESS ] Setor berhasil!\n";
+            cout << HIJAU << "\n[ SUCCESS ] Setor berhasil!\n" << RESET;
             return;
         }
     }
@@ -286,6 +296,10 @@ void Bank::tarikSaldo() {
         break;
     }
 
+    cout << "\n========================================";
+    cout << "\n          SETOR SALDO NASABAH";
+    cout << "\n========================================\n";
+    
     if (rekening == "0") return;
 
     for (int i = 0; i < jumlahNasabah; i++) {
@@ -309,7 +323,7 @@ void Bank::tarikSaldo() {
                 *daftarNasabah[i] -= jumlah;
                 
                 simpanFile();
-                cout << "\n[ SUCCESS ] Penarikan berhasil!\n";
+                cout << HIJAU << "\n[ SUCCESS ] Penarikan berhasil!\n" << RESET;
             } else {
                 cout << MERAH
                         << "\n[ ERROR ] Saldo minimal tersisa 10.000!\n"
@@ -372,7 +386,7 @@ void Bank::cekDataNasabah() {
                 cout << BRONZE;
 
                 cout << "\n========================================";
-                cout << "\n         NASABAH BRONZE";
+                cout << "\n           NASABAH BRONZE";
                 cout << "\n========================================";
                 cout << "\n Nama         : " << daftarNasabah[i]->getNama();
                 cout << "\n Spesies      : " << daftarNasabah[i]->getSpesies();
@@ -388,7 +402,7 @@ void Bank::cekDataNasabah() {
                 cout << SILVER;
 
                 cout << "\n========================================";
-                cout << "\n         NASABAH SILVER";
+                cout << "\n           NASABAH SILVER";
                 cout << "\n========================================";
                 cout << "\n Nama         : " << daftarNasabah[i]->getNama();
                 cout << "\n Spesies      : " << daftarNasabah[i]->getSpesies();
@@ -404,7 +418,7 @@ void Bank::cekDataNasabah() {
                 cout << GOLD;
 
                 cout << "\n========================================";
-                cout << "\n          NASABAH GOLD";
+                cout << "\n            NASABAH GOLD";
                 cout << "\n========================================";
                 cout << "\n Nama         : " << daftarNasabah[i]->getNama();
                 cout << "\n Spesies      : " << daftarNasabah[i]->getSpesies();
@@ -463,14 +477,14 @@ void Bank::statistikBank() {
     }
 
     cout << "\n========================================";
-    cout << "\n             STATISTIK BANK";
+    cout << "\n            STATISTIK BANK";
     cout << "\n========================================";
     cout << "\nJumlah Nasabah : " << jumlahNasabah;
     cout << "\nTotal Saldo    : " << fixed << setprecision(0) << totalSaldo;
     cout << "\nRata-rata      : " << totalSaldo / jumlahNasabah;
-    cout << "\nNasabah Gold   : " << jumlahGold;
-    cout << "\nNasabah Silver : " << jumlahSilver;
-    cout << "\nNasabah Bronze : " << jumlahBronze;
+    cout << GOLD << "\nNasabah Gold   : " << jumlahGold << RESET; 
+    cout << SILVER << "\nNasabah Silver : " << jumlahSilver << RESET;
+    cout << BRONZE << "\nNasabah Bronze : " << jumlahBronze << RESET;
     cout << "\nNasabah Kaya   : " << namaTerkaya;
     cout << "\nSaldo Tertinggi: " << saldoTerbesar;
     cout << "\n========================================\n";
