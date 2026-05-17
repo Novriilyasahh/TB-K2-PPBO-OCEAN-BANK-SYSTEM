@@ -297,7 +297,7 @@ void Bank::tarikSaldo() {
     }
 
     cout << "\n========================================";
-    cout << "\n          SETOR SALDO NASABAH";
+    cout << "\n          TARIK SALDO NASABAH";
     cout << "\n========================================\n";
     
     if (rekening == "0") return;
