@@ -431,7 +431,9 @@ void Bank::statistikBank() {
     }
 
     double totalSaldo = 0, saldoTerbesar = 0;
-    int jumlahPremium = 0;
+    int jumlahGold = 0;
+    int jumlahSilver = 0;
+    int jumlahBronze = 0;
     string namaTerkaya = "-";
 
     for (int i = 0; i < jumlahNasabah; i++) {
@@ -442,8 +444,21 @@ void Bank::statistikBank() {
             namaTerkaya = daftarNasabah[i]->getNama();
         }
 
-        if (daftarNasabah[i]->getSaldo() >= 1000000) {
-            jumlahPremium++;
+        double saldo = daftarNasabah[i]->getSaldo();
+
+        // BRONZE
+        if (saldo >= 10000 && saldo <= 99999) {
+            jumlahBronze++;
+        }
+
+        // SILVER
+        else if (saldo >= 100000 && saldo <= 999999) {
+            jumlahSilver++;
+        }
+
+        // GOLD
+        else if (saldo >= 1000000) {
+            jumlahGold++;
         }
     }
 
@@ -453,7 +468,9 @@ void Bank::statistikBank() {
     cout << "\nJumlah Nasabah : " << jumlahNasabah;
     cout << "\nTotal Saldo    : " << fixed << setprecision(0) << totalSaldo;
     cout << "\nRata-rata      : " << totalSaldo / jumlahNasabah;
-    cout << "\nNasabah Gold   : " << jumlahPremium;
+    cout << "\nNasabah Gold   : " << jumlahGold;
+    cout << "\nNasabah Silver : " << jumlahSilver;
+    cout << "\nNasabah Bronze : " << jumlahBronze;
     cout << "\nNasabah Kaya   : " << namaTerkaya;
     cout << "\nSaldo Tertinggi: " << saldoTerbesar;
     cout << "\n========================================\n";
