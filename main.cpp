@@ -46,8 +46,8 @@ int main() {
         while (cin.fail()) {
             cin.clear();
             cin.ignore(1000, '\n');
-            cout << "\n[ ERROR ] Input harus angka!\n";
-            cout << "Pilih menu lagi : ";
+            cout << MERAH << "\n[ ERROR ] Input harus angka!\n" << RESET;
+            cout <<  "Pilih menu lagi : ";
             cin >> pilihan;
         }
 
@@ -66,7 +66,7 @@ int main() {
                 cout << "\n====================================================\n";
                 break;
             default:
-                cout << "\n[ ERROR ] Menu hanya tersedia 1 - 8!\n";
+                cout << MERAH << "\n[ ERROR ] Menu hanya tersedia 1 - 8!\n" << RESET;
         }
         
         if(pilihan != 8) {
