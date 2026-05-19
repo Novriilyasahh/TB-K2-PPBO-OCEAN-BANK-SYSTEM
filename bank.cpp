@@ -69,50 +69,53 @@ void Bank::tambahNasabah() {
     cin.ignore();
 
     // INPUT NAMA
-while (1) {
+    while (1) {
 
-    int namaSama = 0;
+        int namaSama = 0;
 
-    cout << "(0 = Kembali)\nNama Nasabah : ";
-    getline(cin, nama);
+        cout << "(0 = Kembali)\nNama Nasabah : ";
+        getline(cin, nama);
 
-    if (nama == "0") return;
+        if (nama == "0") return;
 
-    if (validHuruf(nama) == 1) {
-
-        cout << MERAH
-             << "\n[ ERROR ] Nama hanya boleh huruf!\n"
-             << RESET;
-
-        continue;
-    }
-
-    // CEK NAMA DUPLIKAT
-    for (int i = 0; i < jumlahNasabah; i++) {
-
-        if (daftarNasabah[i]->getNama() == nama) {
-
-            namaSama = 1;
+        // FIX 1: cek input kosong / hanya spasi
+        if (nama.empty() || nama.find_first_not_of(' ') == string::npos) {
+            cout << MERAH << "\n[ ERROR ] Nama tidak boleh kosong!\n" << RESET;
+            continue;
         }
+
+        if (validHuruf(nama) == 1) {
+            cout << MERAH << "\n[ ERROR ] Nama hanya boleh huruf!\n" << RESET;
+            continue;
+        }
+
+        // CEK NAMA DUPLIKAT
+        for (int i = 0; i < jumlahNasabah; i++) {
+            if (daftarNasabah[i]->getNama() == nama) {
+                namaSama = 1;
+            }
+        }
+
+        if (namaSama == 1) {
+            cout << MERAH << "\n[ ERROR ] Nama nasabah sudah digunakan!\n" << RESET;
+            continue;
+        }
+
+        break;
     }
-
-    if (namaSama == 1) {
-
-        cout << MERAH
-             << "\n[ ERROR ] Nama nasabah sudah digunakan!\n"
-             << RESET;
-
-        continue;
-    }
-
-    break;
-}
 
     // INPUT SPESIES
     while (1) {
         cout << "(0 = Kembali)\nSpesies Laut : ";
         getline(cin, spesies);
         if (spesies == "0") return;
+
+        // FIX 1: cek input kosong / hanya spasi
+        if (spesies.empty() || spesies.find_first_not_of(' ') == string::npos) {
+            cout << MERAH << "\n[ ERROR ] Spesies tidak boleh kosong!\n" << RESET;
+            continue;
+        }
+
         if (validHuruf(spesies) == 0) break;
         cout << MERAH << "\n[ ERROR ] Spesies hanya boleh huruf!\n" << RESET;
     }
@@ -157,27 +160,11 @@ while (1) {
     }
 
     // INSTANSIASI OBJECT BERDASARKAN SALDO
-        if (saldo >= 1000000) {
-
-            daftarNasabah[jumlahNasabah]
-                = new PremiumNasabah(
-                    nama,
-                    spesies,
-                    rekening,
-                    saldo,
-                    "Gold"
-                );
-        }
-        else {
-
-            daftarNasabah[jumlahNasabah]
-                = new RegulerNasabah(
-                    nama,
-                    spesies,
-                    rekening,
-                    saldo
-                );
-        }
+    if (saldo >= 1000000) {
+        daftarNasabah[jumlahNasabah] = new PremiumNasabah(nama, spesies, rekening, saldo, "Gold");
+    } else {
+        daftarNasabah[jumlahNasabah] = new RegulerNasabah(nama, spesies, rekening, saldo);
+    }
 
     jumlahNasabah++;
     simpanFile();
@@ -227,23 +214,23 @@ void Bank::cekSaldo() {
 
 void Bank::setorSaldo() {
     string rekening, inputJumlah;
-double jumlah;
+    double jumlah;
 
-while (1) {
+    while (1) {
 
-    cout << "\n(0 = Kembali)";
-    cout << "\nMasukkan nomor rekening : ";
-    cin >> rekening;
+        cout << "\n(0 = Kembali)";
+        cout << "\nMasukkan nomor rekening : ";
+        cin >> rekening;
 
-    if (rekening == "0") return;
+        if (rekening == "0") return;
 
-    if (validAngka(rekening) == 1) {
-        cout << MERAH << "\n[ ERROR ] Rekening harus angka!\n" << RESET;
-        continue;
+        if (validAngka(rekening) == 1) {
+            cout << MERAH << "\n[ ERROR ] Rekening harus angka!\n" << RESET;
+            continue;
+        }
+
+        break;
     }
-
-    break;
-}
 
     cout << "\n========================================";
     cout << "\n          SETOR SALDO NASABAH";
@@ -261,9 +248,15 @@ while (1) {
             }
 
             jumlah = atof(inputJumlah.c_str());
-            if (jumlah < 10000 || jumlah > 50000000) {
-                 cout << MERAH << "\n[ ERROR ] Limit setor 10.000 - 50.000.000\n" << RESET;
-                 return;
+            if (jumlah < 10000) {
+                cout << MERAH << "\n[ ERROR ] Minimal setor 10.000!\n" << RESET;
+                return;
+            }
+
+            // FIX 3: cek batas maksimal saldo setelah setor
+            if ((daftarNasabah[i]->getSaldo() + jumlah) > 50000000) {
+                cout << MERAH << "\n[ ERROR ] Total saldo tidak boleh melebihi 50.000.000!\n" << RESET;
+                return;
             }
 
             // PENGGUNAAN OPERATOR OVERLOADING
@@ -438,6 +431,7 @@ void Bank::cekDataNasabah() {
          << "\n[ ERROR ] Data tidak ditemukan!\n"
          << RESET;
 }
+
 void Bank::statistikBank() {
     if (jumlahNasabah == 0) {
         cout << "\n[ INFO ] Belum ada data nasabah.\n";
@@ -448,14 +442,12 @@ void Bank::statistikBank() {
     int jumlahGold = 0;
     int jumlahSilver = 0;
     int jumlahBronze = 0;
-    string namaTerkaya = "-";
 
     for (int i = 0; i < jumlahNasabah; i++) {
         totalSaldo += daftarNasabah[i]->getSaldo();
 
         if (daftarNasabah[i]->getSaldo() > saldoTerbesar) {
             saldoTerbesar = daftarNasabah[i]->getSaldo();
-            namaTerkaya = daftarNasabah[i]->getNama();
         }
 
         double saldo = daftarNasabah[i]->getSaldo();
@@ -485,53 +477,130 @@ void Bank::statistikBank() {
     cout << GOLD << "\nNasabah Gold   : " << jumlahGold << RESET; 
     cout << SILVER << "\nNasabah Silver : " << jumlahSilver << RESET;
     cout << BRONZE << "\nNasabah Bronze : " << jumlahBronze << RESET;
-    cout << "\nNasabah Kaya   : " << namaTerkaya;
     cout << "\nSaldo Tertinggi: " << saldoTerbesar;
     cout << "\n========================================\n";
 }
 
+// FIX 2: simpanFile dirapikan + buat file kategori terpisah
 void Bank::simpanFile() {
+    // File utama semua nasabah
     ofstream file("data_nasabah.txt");
+    file << "========================================\n";
+    file << "         DATA NASABAH OCEAN BANK\n";
+    file << "========================================\n";
     for (int i = 0; i < jumlahNasabah; i++) {
-        file << daftarNasabah[i]->getNama() << "|"
+        double saldo = daftarNasabah[i]->getSaldo();
+        string level;
+        if (saldo >= 1000000)       level = "Gold";
+        else if (saldo >= 100000)   level = "Silver";
+        else                        level = "Bronze";
+
+        file << "[" << (i + 1) << "] "
+             << daftarNasabah[i]->getNama() << "|"
              << daftarNasabah[i]->getSpesies() << "|"
              << daftarNasabah[i]->getRekening() << "|"
-             << fixed << setprecision(0) << daftarNasabah[i]->getSaldo() << endl;
+             << fixed << setprecision(0) << saldo << "|"
+             << level << "\n";
     }
+    file << "========================================\n";
+    file << "Total Nasabah : " << jumlahNasabah << "\n";
+    file << "========================================\n";
     file.close();
+
+    // File kategori nasabah (bronze, silver, gold)
+    ofstream fileKategori("data_kategori.txt");
+    fileKategori << "========================================\n";
+    fileKategori << "      KATEGORI NASABAH OCEAN BANK\n";
+    fileKategori << "========================================\n";
+
+    // --- GOLD ---
+    fileKategori << "\n[GOLD] (Saldo >= 1.000.000)\n";
+    fileKategori << "----------------------------------------\n";
+    int countGold = 0;
+    for (int i = 0; i < jumlahNasabah; i++) {
+        if (daftarNasabah[i]->getSaldo() >= 1000000) {
+            fileKategori << "  Nama     : " << daftarNasabah[i]->getNama() << "\n";
+            fileKategori << "  Spesies  : " << daftarNasabah[i]->getSpesies() << "\n";
+            fileKategori << "  Rekening : " << daftarNasabah[i]->getRekening() << "\n";
+            fileKategori << "  Saldo    : " << fixed << setprecision(0) << daftarNasabah[i]->getSaldo() << "\n";
+            fileKategori << "  ..............................\n";
+            countGold++;
+        }
+    }
+    if (countGold == 0) fileKategori << "  (Tidak ada nasabah Gold)\n";
+
+    // --- SILVER ---
+    fileKategori << "\n[SILVER] (Saldo 100.000 - 999.999)\n";
+    fileKategori << "----------------------------------------\n";
+    int countSilver = 0;
+    for (int i = 0; i < jumlahNasabah; i++) {
+        double s = daftarNasabah[i]->getSaldo();
+        if (s >= 100000 && s <= 999999) {
+            fileKategori << "  Nama     : " << daftarNasabah[i]->getNama() << "\n";
+            fileKategori << "  Spesies  : " << daftarNasabah[i]->getSpesies() << "\n";
+            fileKategori << "  Rekening : " << daftarNasabah[i]->getRekening() << "\n";
+            fileKategori << "  Saldo    : " << fixed << setprecision(0) << s << "\n";
+            fileKategori << "  ..............................\n";
+            countSilver++;
+        }
+    }
+    if (countSilver == 0) fileKategori << "  (Tidak ada nasabah Silver)\n";
+
+    // --- BRONZE ---
+    fileKategori << "\n[BRONZE] (Saldo 10.000 - 99.999)\n";
+    fileKategori << "----------------------------------------\n";
+    int countBronze = 0;
+    for (int i = 0; i < jumlahNasabah; i++) {
+        double s = daftarNasabah[i]->getSaldo();
+        if (s >= 10000 && s <= 99999) {
+            fileKategori << "  Nama     : " << daftarNasabah[i]->getNama() << "\n";
+            fileKategori << "  Spesies  : " << daftarNasabah[i]->getSpesies() << "\n";
+            fileKategori << "  Rekening : " << daftarNasabah[i]->getRekening() << "\n";
+            fileKategori << "  Saldo    : " << fixed << setprecision(0) << s << "\n";
+            fileKategori << "  ..............................\n";
+            countBronze++;
+        }
+    }
+    if (countBronze == 0) fileKategori << "  (Tidak ada nasabah Bronze)\n";
+
+    fileKategori << "\n========================================\n";
+    fileKategori << "Gold   : " << countGold << " nasabah\n";
+    fileKategori << "Silver : " << countSilver << " nasabah\n";
+    fileKategori << "Bronze : " << countBronze << " nasabah\n";
+    fileKategori << "========================================\n";
+    fileKategori.close();
 }
 
 void Bank::bacaFile() {
+    // bacaFile tetap baca format lama (pipe-separated) supaya data lama tetap terbaca
+    // format baru di simpanFile pakai prefix "[N] " jadi kita skip baris non-data
     ifstream file("data_nasabah.txt");
-    string nama, spesies, rekening;
-    double saldo;
+    string baris;
 
-    while (getline(file, nama, '|')) {
-        getline(file, spesies, '|');
-        getline(file, rekening, '|');
-        file >> saldo;
-        file.ignore(); // Membersihkan newline
+    while (getline(file, baris)) {
+        // Cari baris yang diawali "[angka] " (format baru)
+        if (baris.empty() || baris[0] != '[') continue;
+
+        // Hapus prefix "[N] "
+        size_t tutup = baris.find(']');
+        if (tutup == string::npos) continue;
+        string data = baris.substr(tutup + 2); // skip "] "
+
+        // Parse pipe-separated
+        stringstream ss(data);
+        string nama, spesies, rekening, saldoStr, level;
+        if (!getline(ss, nama, '|'))     continue;
+        if (!getline(ss, spesies, '|'))  continue;
+        if (!getline(ss, rekening, '|')) continue;
+        if (!getline(ss, saldoStr, '|')) continue;
+        // level bisa diabaikan, ditentukan dari saldo
+
+        double saldo = atof(saldoStr.c_str());
 
         if (saldo >= 1000000) {
-
-            daftarNasabah[jumlahNasabah]
-                = new PremiumNasabah(
-                    nama,
-                    spesies,
-                    rekening,
-                    saldo,
-                    "Gold"
-                );
-        }
-        else {
-
-            daftarNasabah[jumlahNasabah]
-                = new RegulerNasabah(
-                    nama,
-                    spesies,
-                    rekening,
-                    saldo
-                );
+            daftarNasabah[jumlahNasabah] = new PremiumNasabah(nama, spesies, rekening, saldo, "Gold");
+        } else {
+            daftarNasabah[jumlahNasabah] = new RegulerNasabah(nama, spesies, rekening, saldo);
         }
         jumlahNasabah++;
     }
