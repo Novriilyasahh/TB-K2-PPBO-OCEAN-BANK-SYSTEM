@@ -253,12 +253,6 @@ void Bank::setorSaldo() {
                 return;
             }
 
-            // FIX 3: cek batas maksimal saldo setelah setor
-            if ((daftarNasabah[i]->getSaldo() + jumlah) > 50000000) {
-                cout << MERAH << "\n[ ERROR ] Total saldo tidak boleh melebihi 50.000.000!\n" << RESET;
-                return;
-            }
-
             // PENGGUNAAN OPERATOR OVERLOADING
             *daftarNasabah[i] += jumlah; 
             
@@ -306,10 +300,14 @@ void Bank::tarikSaldo() {
             }
 
             jumlah = atof(inputJumlah.c_str());
-            if (jumlah < 10000) {
-                 cout << MERAH << "\n[ ERROR ] Minimal penarikan 10.000!\n" << RESET;
-                 return;
-            }
+           if (jumlah < 10000 || jumlah > 50000000) {
+
+            cout << MERAH
+                << "\n[ ERROR ] Minimal setor 10.000 dan maksimal 50.000.000 per transaksi!\n"
+                << RESET;
+
+            return;
+        }
 
             if ((daftarNasabah[i]->getSaldo() - jumlah) >= 10000) {
                 // PENGGUNAAN OPERATOR OVERLOADING
